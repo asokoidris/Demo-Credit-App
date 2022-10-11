@@ -4,6 +4,7 @@ const knex = require('../config/database');
 
 /**
  * @description -This class is used to handle all authentication
+ * @class Authentication
  */
 
 class Authentication {

@@ -5,6 +5,12 @@ const bodyParser = require('body-parser');
 const Logger = require('../config/logger');
 const morgan = require('morgan');
 
+// cron jobs and cron job scheduler and functions
+const { verifyPaymentJob } = require('../jobs/verify-payment-cron');
+
+// start cron job
+verifyPaymentJob.start();
+
 // routes
 const userRoute = require('./user-route');
 const walletRoute = require('./wallet-route');
@@ -17,7 +23,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'UPDATE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );

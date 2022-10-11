@@ -7,8 +7,14 @@ exports.up = function (knex) {
     table.increments('id').primary();
     table.string('type').notNullable();
     table.integer('amount').notNullable();
-    table.integer('wallet_id').unsigned().notNullable();
-    table.foreign('wallet_id').references('wallets.id').onDelete('CASCADE');
+    table.string('currency').notNullable();
+    table.string('account_number').notNullable();
+    table.string('bank_code').notNullable();
+    table.string('token').notNullable();
+    table.string('reference').notNullable();
+    table.string('status').notNullable().defaultTo('pending');
+    table.integer('user_id').unsigned().notNullable();
+    table.foreign('user_id').references('id').inTable('users');
     table.timestamps(true, true);
   });
 };

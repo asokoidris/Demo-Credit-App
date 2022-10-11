@@ -85,7 +85,7 @@ class UserService {
         logger.error(`User does not exist with email: ${email}`);
         return {
           statusCode: 401,
-          message: 'User does not exist',
+          message: 'Invalid credentials',
         };
       }
 
@@ -98,7 +98,7 @@ class UserService {
         logger.error(`Invalid password for email: ${email}`);
         return {
           statusCode: 401,
-          message: 'Invalid password',
+          message: 'Invalid credentials',
         };
       }
 

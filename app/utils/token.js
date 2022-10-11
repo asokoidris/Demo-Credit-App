@@ -12,7 +12,6 @@ class Token {
    * @memberof Token
    */
   static generateToken(user) {
-    console.log(user, 'user', JWTSECRET);
     const payload = {
       subject: user.id,
       email: user.email,

@@ -57,6 +57,48 @@ class WalletController {
       return errorResponse(res, 500, 'Oops! Something went wrong');
     }
   }
+
+  /**
+   * @description - This method is used to deposit money into a wallet
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Returns an object
+   * @memberof WalletController
+   */
+  static async creditWallet(req, res) {
+    try {
+      const { user } = req;
+      const result = await WalletService.creditWallet(user, req.body);
+      if (result.statusCode == 404)
+        return errorResponse(res, result.statusCode, result.message);
+      logger.info(`Deposit successful: ${JSON.stringify(result)}`);
+      return successResponse(res, 200, 'Deposit successful', result);
+    } catch (error) {
+      logger.error(`Error in deposit: ${JSON.stringify(error.message)}`);
+      return errorResponse(res, 500, 'Oops! Something went wrong');
+    }
+  }
+
+  /**
+   * @description - This method is used to withdraw money from a wallet
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Returns an object
+   * @memberof WalletController
+   */
+  static async initiateWithdrawal(req, res) {
+    try {
+      const { user } = req;
+      const result = await WalletService.initiateWithdrawal(user, req.body);
+      if (result.statusCode == 404)
+        return errorResponse(res, result.statusCode, result.message);
+      logger.info(`Withdrawal successful: ${JSON.stringify(result)}`);
+      return successResponse(res, 200, 'Withdrawal successful', result);
+    } catch (error) {
+      logger.error(`Error in withdrawal: ${JSON.stringify(error.message)}`);
+      return errorResponse(res, 500, 'Oops! Something went wrong');
+    }
+  }
 }
 
 module.exports = WalletController;
