@@ -98,12 +98,16 @@ class WalletService {
    * @memberof WalletService
    */
   static async initiateWithdrawal(user, data) {
-    const TransactionModel = () => knex('transactions');
+    const wallet = await WalletService.getWallets(user);
+
+    if (wallet.balance < data.amount)
+      return {
+        statusCode: 404,
+        message: 'Insufficient funds',
+      };
 
     // NOTE - create a transaction transfer refrence should be done in different controller and service but for the sake of this project
     const recipient = await PaystackService.createTransferRecipient(data);
-
-    console.log(recipient, 'recipient');
 
     if (recipient.statusCode == 404)
       return {
@@ -149,6 +153,80 @@ class WalletService {
     logger.info(`User wallet debited successfully: ${JSON.stringify(result)}`);
 
     const userWallet = await WalletService.getWallets(user);
+
+    return {
+      statusCode: 200,
+      message: 'Transaction successful, your wallet has been debited',
+      data: userWallet,
+    };
+  }
+
+  /**
+   * @description - This method is used to transfer funds to a another user from wallet
+   * @param {object} user - The user object
+   * @returns {object} data - Returns an object
+   * @memberof WalletService
+   */
+  static async transferFunds(user, data) {
+    const UserModel = () => knex('users');
+
+    const receiverUniqueIdentity = data.email || data.username;
+    const wallet = await WalletService.getWallets(user);
+
+    if (wallet.balance < data.amount)
+      return {
+        statusCode: 404,
+        message: 'Insufficient funds',
+      };
+
+    // check if user exist by email or phone number
+    const receiver = await UserModel()
+      .where({ email: receiverUniqueIdentity })
+      .orWhere({
+        username: receiverUniqueIdentity,
+      })
+      .first();
+
+    if (!receiver)
+      return {
+        statusCode: 404,
+        message: 'User not found',
+      };
+
+    const receiverWallet = await WalletService.getWallets(receiver);
+
+    await knex.transaction(async (trx) => {
+      const transaction = await trx('transactions').insert({
+        user_id: user.id,
+        type: 'credit transfer',
+        amount: data.amount,
+        reference: receiver.id,
+        currency: data.currency,
+        account_number: receiverWallet.account_number || '',
+        bank_code: receiverWallet.bank_code || '',
+        token: '',
+      });
+
+      const debitWallet = await trx('wallets')
+        .where({ user_id: user.id })
+        .decrement('balance', data.amount);
+
+      const creditWallet = await trx('wallets')
+        .where({ user_id: receiver.id })
+        .increment('balance', data.amount);
+
+      // update status of transaction to completed
+      await trx('transactions')
+        .where({ id: transaction[0] })
+        .update({ status: 'completed' });
+
+      return { transaction, debitWallet, creditWallet };
+    });
+
+    const userWallet = await WalletService.getWallets(user);
+    logger.info(
+      `User wallet debited successfully: ${JSON.stringify(userWallet)}`
+    );
 
     return {
       statusCode: 200,

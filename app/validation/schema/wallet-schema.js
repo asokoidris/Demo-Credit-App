@@ -20,7 +20,18 @@ const initiateWithdrawal = joi.object().keys({
   amount: joi.number().required(),
 });
 
+const transfer = joi
+  .object()
+  .keys({
+    username: joi.string(),
+    email: joi.string().email(),
+    amount: joi.number().required(),
+    currency: joi.string().required(),
+  })
+  .or('username', 'email');
+
 module.exports = {
   creditWallet,
   initiateWithdrawal,
+  transfer,
 };

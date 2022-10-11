@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   creditWallet,
   initiateWithdrawal,
+  transfer,
 } = require('../validation/schema/wallet-schema');
 const { validate } = require('../validation/validatorClass');
 const WalletController = require('../controllers/wallet-controller');
@@ -19,11 +20,19 @@ router.post(
   WalletController.creditWallet
 );
 router.post(
-  '/initiate-withdrawal',
+  '/withdrawal',
   Auth.checkUserAuthentication,
   Currency.checkCurrency,
   validate(initiateWithdrawal),
   WalletController.initiateWithdrawal
+);
+
+router.post(
+  '/transfer',
+  Auth.checkUserAuthentication,
+  Currency.checkCurrency,
+  validate(transfer),
+  WalletController.transfer
 );
 
 module.exports = router;

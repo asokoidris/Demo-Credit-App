@@ -8,7 +8,6 @@ const createUserSchema = joi.object({
 
 const loginUserSchema = joi
   .object({
-    // login with email or username is allowed both are not required
     username: joi.string(),
     email: joi.string().email(),
     password: joi.string().min(6).max(30).required(),
