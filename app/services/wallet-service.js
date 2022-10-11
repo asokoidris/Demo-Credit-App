@@ -1,5 +1,8 @@
 const knex = require('../config/database');
+const WalletModel = () => knex('wallets');
 const PaystackService = require('../services/paystack-service');
+const TransactionModel = () => knex('transactions');
+const UserModel = () => knex('users');
 
 /**
  * @description - wallet service class for business logic
@@ -14,8 +17,6 @@ class WalletService {
    */
 
   static async getWallets(user) {
-    const WalletModel = () => knex('wallets');
-
     const wallet = await WalletModel().where({ user_id: user.id }).first();
 
     if (!wallet)
@@ -51,8 +52,6 @@ class WalletService {
    * @memberof WalletService
    */
   static async creditWallet(user, data) {
-    const TransactionModel = () => knex('transactions');
-
     const result = await PaystackService.charge(data);
 
     if (result.statusCode == 404)
@@ -130,7 +129,6 @@ class WalletService {
 
     // NOTE - due to been unable to transfer to a bank account, the transaction is saved to the database and the wallet is debited
 
-    console.log(data.amount);
     await knex.transaction(async (trx) => {
       const transaction = await trx('transactions').insert({
         user_id: user.id,
@@ -146,6 +144,10 @@ class WalletService {
       const wallet = await trx('wallets')
         .where({ user_id: user.id })
         .decrement('balance', data.amount / 100);
+
+      await trx('transactions')
+        .where({ id: transaction[0] })
+        .update({ status: 'success' });
 
       return { transaction, wallet };
     });
@@ -168,8 +170,6 @@ class WalletService {
    * @memberof WalletService
    */
   static async transferFunds(user, data) {
-    const UserModel = () => knex('users');
-
     const receiverUniqueIdentity = data.email || data.username;
     const wallet = await WalletService.getWallets(user);
 

@@ -1,6 +1,5 @@
 const { PAYSTACK_SECRET_KEY, PAYSTACK_PUBLIC_KEY } = require('../config/keys');
 const axios = require('axios');
-const https = require('https');
 
 /**
  * @description This service handles all paystack related operations 😃

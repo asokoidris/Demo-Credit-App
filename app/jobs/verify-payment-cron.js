@@ -2,7 +2,6 @@ const cronJob = require('cron').CronJob;
 const knex = require('../config/database');
 const PaystackService = require('../services/paystack-service');
 const TransactionModel = () => knex('transactions');
-const WalletModel = () => knex('wallets');
 const UserModel = () => knex('users');
 
 // run job every 5 minutes to check for pending transactions

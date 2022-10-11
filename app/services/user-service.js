@@ -1,5 +1,7 @@
 // const UserSchema = require('../models/users');
 const knex = require('../config/database');
+const UserModel = () => knex('users');
+const WalletModel = () => knex('wallets');
 const HelperFunctions = require('../utils/helper-functions');
 const Token = require('../utils/token');
 
@@ -17,9 +19,6 @@ class UserService {
    */
   static async createUser(body) {
     const { username, email, password } = body;
-
-    const UserModel = () => knex('users');
-    const WalletModel = () => knex('wallets');
 
     const user = await UserModel()
       .where({ email })
@@ -73,8 +72,6 @@ class UserService {
       const { email, username, password } = body;
 
       const emailOrUsername = email || username;
-
-      const UserModel = () => knex('users');
 
       const user = await UserModel()
         .where({ email: emailOrUsername })
