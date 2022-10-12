@@ -34,11 +34,11 @@ const verifyPaymentJob = new cronJob('*/5 * * * *', function () {
             await knex.transaction(async (trx) => {
               await trx('wallets')
                 .where({ user_id: transaction.user_id })
-                .increment('balance', transaction.amount)
-                .update({ updated_at: new Date() });
+                .increment('balance', transaction.amount);
+
               await trx('transactions')
                 .where({ id: transaction.id })
-                .update({ status: result.status, updated_at: new Date() });
+                .update({ status: result.status });
             });
 
             logger.info(

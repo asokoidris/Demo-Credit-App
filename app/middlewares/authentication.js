@@ -23,10 +23,9 @@ class Authentication {
 
       const decoded = await verifyToken(authorization);
 
-      const user = await knex('users')
-        .where({ id: decoded.subject })
-        .orWhere({ email: decoded.email })
-        .first();
+      const user = await knex('users').Where({ email: decoded.email }).first();
+
+      console.log(user);
       if (!user) return errorResponse(res, 401, 'Unauthorized');
 
       req.user = user;
