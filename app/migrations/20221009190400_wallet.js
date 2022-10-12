@@ -10,7 +10,7 @@ exports.up = function (knex) {
     table.integer('balance').notNullable();
     table.integer('user_id').unsigned().notNullable();
     table.foreign('user_id').references('users.id').onDelete('CASCADE');
-    table.timestamps(true, true);
+    table.timestamp('created_at').defaultTo(knex.fn.now());
   });
 };
 

@@ -5,11 +5,11 @@ module.exports = {
   development: {
     client: 'mysql2',
     connection: {
-      host: '127.0.0.1',
+      host: 'sql6.freesqldatabase.com',
       port: 3306,
-      user: 'root',
-      password: '1234567890',
-      database: 'democredit',
+      user: 'sql6525993',
+      password: 'tHipbAFTgK',
+      database: 'sql6525993',
     },
     migrations: {
       directory: './migrations',

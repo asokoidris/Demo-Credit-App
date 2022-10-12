@@ -23,15 +23,16 @@ class Authentication {
 
       const decoded = await verifyToken(authorization);
 
-      const user = await knex('users').Where({ email: decoded.email }).first();
-
-      console.log(user);
+      const user = await knex('users')
+        .where({ id: decoded.subject })
+        .orWhere({ email: decoded.email })
+        .first();
       if (!user) return errorResponse(res, 401, 'Unauthorized');
 
       req.user = user;
       next();
     } catch (error) {
-      return errorResponse(res, 500, 'Oops! Something went wrong');
+      return errorResponse(res, 400, 'Unauthorized');
     }
   }
 }

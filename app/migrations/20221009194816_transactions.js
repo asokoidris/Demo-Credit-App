@@ -15,7 +15,7 @@ exports.up = function (knex) {
     table.string('status').notNullable().defaultTo('pending');
     table.integer('user_id').unsigned().notNullable();
     table.foreign('user_id').references('id').inTable('users');
-    table.timestamps(true, true);
+    table.timestamp('created_at').defaultTo(knex.fn.now());
   });
 };
 

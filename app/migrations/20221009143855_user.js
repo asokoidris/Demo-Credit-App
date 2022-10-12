@@ -8,7 +8,8 @@ exports.up = function (knex) {
     table.string('username').notNullable();
     table.string('email').notNullable().unique();
     table.string('password').notNullable();
-    table.timestamps(true, true);
+    // there can be only one TIMESTAMP column with CURRENT_TIMESTAMP in DEFAULT or ON UPDATE clause
+    table.timestamp('created_at').defaultTo(knex.fn.now());
   });
 };
 
