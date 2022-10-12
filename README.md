@@ -3,6 +3,14 @@ This is a demo credit for the [Demo](
   wallet feature
 ) feature.
 
+Demo credit functionalities:
+
+A user can create an account
+A user can fund their account
+A user can transfer funds to another user’s account
+A user can withdraw funds from their account.
+
+
 
 ## Environmental Variables
 
