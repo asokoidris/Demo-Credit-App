@@ -9,6 +9,11 @@ This is a demo credit for the [Demo](
 You'll need the env variables below to run the app
 
 ```
+  DB_HOST
+  DB_PORT
+  DB_USER
+  DB_PASSWORD
+  DB_NAME
   TEST_DB,
   LOCAL_DB
   PRODUCTION_DB
@@ -16,7 +21,5 @@ You'll need the env variables below to run the app
   NODE_ENV
   BCRYPT
   JWTSECRET
-  SENDGRID_API_KEY
-  SENDERS_EMAIL
 
 ```

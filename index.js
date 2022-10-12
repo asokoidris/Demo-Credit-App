@@ -11,7 +11,7 @@ knex
     logger.info('Database connected');
   })
   .catch((err) => {
-    logger.error(err);
+    logger.error(err.message);
   });
 
 server.listen(Port, () => logger.info(`Server running on port ${Port}`));
